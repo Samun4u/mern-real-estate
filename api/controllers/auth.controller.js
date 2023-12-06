@@ -56,8 +56,8 @@ export const google = async(req,res,next) => {
             const {password: pass, ..._user} = user._doc;
             res.cookie('access_token', token,{ httpOnly: true}).status(200).json(_user);
         }else{
-            username = name.split(" ").join("").toLowerCase() + Math().random().toSting(36).slice(-4);
-            const generatedPassword = Math().random().toSting(36).slice(-8) + Math().random().toSting(36).slice(-8);
+            const username = name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4);
+            const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
             const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
 
             const newUser = new User({
