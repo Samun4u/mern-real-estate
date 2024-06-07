@@ -2,9 +2,9 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import userRouter from './routes/user.route.js';
-import authRouter from './routes/auth.router.js';
-import listingRouter from './routes/listing.router.js';
+import userRouter from './server/routes/user.route.js';
+import authRouter from './server/routes/auth.router.js';
+import listingRouter from './server/routes/listing.router.js';
 dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URL).then(()=>{
