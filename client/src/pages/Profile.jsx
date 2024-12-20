@@ -158,7 +158,7 @@ export default function Profile() {
       const res = await fetch(`/api/listing/delete/${listingId}`,{
         method: 'DELETE',
       });
-      const data = res.json();
+      const data = await res.json();
 
       if(data.success === false){
         console.log(data.message);
@@ -166,7 +166,7 @@ export default function Profile() {
       }
 
       setUserListings((prev) => 
-        prev.filter((listing) => listing.id !== listingId)
+        prev.filter((listing) => listing._id !== listingId)
       );
       
     } catch (error) {
