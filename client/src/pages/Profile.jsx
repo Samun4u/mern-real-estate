@@ -16,6 +16,7 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showListingsError, setShowListingsError] = useState(false);
+  const [showListingsErrorMsg, setShowListingsErrorMsg] = useState(null);
   const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
  
@@ -130,18 +131,47 @@ export default function Profile() {
   }
 
   const handleShowListings = async () => {
+    
       try{
         setShowListingsError(false)
+
         const res = await fetch(`/api/user/listings/${currentUser._id}`)
         const data = await res.json();
+
         if(data.success === false){
           setShowListingsError(true);
+          setShowListingsErrorMsg(data.message);
           return;
         }
+        
         setUserListings(data);
+        
       }catch(error){
         setShowListingsError(true);
+        setShowListingsErrorMsg(error.message);
       }
+  }
+
+  const handleListingDelete = async (listingId) => {
+    try {
+
+      const res = await fetch(`/api/listing/delete/${listingId}`,{
+        method: 'DELETE',
+      });
+      const data = res.json();
+
+      if(data.success === false){
+        console.log(data.message);
+        return;
+      }
+
+      setUserListings((prev) => 
+        prev.filter((listing) => listing.id !== listingId)
+      );
+      
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -173,7 +203,7 @@ export default function Profile() {
         <p className="text-green-700 mt-5">{updateSuccess ? 'User is updated successfully!' : ''}</p>
 
         <button onClick={handleShowListings} className="text-green-700 w-full">Show Listings</button>
-        <p className="text-red-700 mt-5">{showListingsError ? 'Error showing listing' : ''}</p>
+        <p className="text-red-700 mt-5">{showListingsError  && showListingsErrorMsg ? showListingsErrorMsg : ''}</p>
 
         {userListings && userListings.length > 0 && 
         
@@ -193,7 +223,7 @@ export default function Profile() {
                       <p className="text-slate-700 font-semibold flex-1 hover:underline truncate">{listing.name}</p>
                     </Link>
                     <div className="flex flex-col items-center">
-                    <button className="text-red-700 uppercase">Delete</button>
+                    <button onClick={() => handleListingDelete(listing._id)} className="text-red-700 uppercase">Delete</button>
                     <button className="text-green-700 uppercase">Edit</button>
                     </div>
                 </div>
